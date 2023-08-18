@@ -1,17 +1,15 @@
 package Stepdef;
 
-//import com.sun.org.apache.bcel.internal.generic.ATHROW;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-//import javax.xml.bind.Element;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-
+import org.openqa.selenium.JavascriptExecutor;
 
 
 public class PurchaseProduct {
@@ -23,140 +21,136 @@ public class PurchaseProduct {
     public void iOpenBrowser() {
         final String dir = System.getProperty("user.dir");
         System.out.println("current dir = " + dir);
-        System.setProperty("webdriver.chrome.driver", dir + "/driver/chromedriver.exe");
-        //System.setProperty("webdriver.gecko.driver", dir + "/driver/geckodriver");
-        driver = new ChromeDriver();
-        //driver = new FirefoxDriver();
+        //System.setProperty("webdriver.chrome.driver", dir + "/driver/chromedriver.exe");
+        System.setProperty("webdriver.gecko.driver", dir + "/driver/geckodriver.exe");
+       // driver = new ChromeDriver();
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
     }
 
-    @And("user go Demo Midtrans website")
-    public void goToMidtransWebsite() throws InterruptedException {
-        driver.get("https://demo.midtrans.com/");
+    @And("user go Voila ID website")
+    public void goToVoilaWebsite() throws InterruptedException {
+        driver.get("https://voila.id/");
+        driver.findElement(By.xpath("//a[contains(.,'Free Shipping to All Over Indonesia')]")).isDisplayed();
+        driver.findElement(By.xpath("//span[.='New Arrival']")).isDisplayed();
     }
 
-    @And("user choose {string} product")
-    public void chooseProduct(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//div[contains(text(),'" + value + "')]")).isDisplayed();
+    @And("user go to login account page")
+    public void loginAccount() throws InterruptedException {
+        driver.findElement(By.xpath("//div[@class='tt-account tt-dropdown-obj']/button[@class='tt-dropdown-toggle']")).isDisplayed();
+        driver.findElement(By.xpath("//div[@class='tt-account tt-dropdown-obj']/button[@class='tt-dropdown-toggle']")).click();
+        driver.findElement(By.xpath("//h2[contains(text(),'login')]")).isDisplayed();
     }
 
-    @And("user click {string} button")
-    public void clickBuyNowButton(String value1) throws InterruptedException {
-        driver.findElement(By.xpath("//a[.='" + value1 + "']")).isDisplayed();
-        driver.findElement(By.xpath("//a[.='" + value1 + "']")).click();
+    @And("user input email & password")
+    public void inputEmailPassword() throws InterruptedException {
+        driver.findElement(By.xpath("//input[@id='loginInputName']")).isDisplayed();
+        driver.findElement(By.xpath("//input[@id='loginInputName']")).sendKeys("tioagung92@gmail.com");
+        driver.findElement(By.xpath("//input[@id='loginInputPassword']")).isDisplayed();
+        driver.findElement(By.xpath("//input[@id='loginInputPassword']")).sendKeys("Tolakangin1234!");
+        driver.findElement(By.xpath("//button[.='Login']")).click();
     }
 
-    @And("user fills the data in Shopping Cart")
-    public void fillDataShoppingCart() {
-        driver.findElement(By.xpath("//span[contains(text(),'Shopping Cart')]")).isDisplayed();
-        //Fills price product
-        driver.findElement(By.xpath("//input[@class='text-right']")).clear();
-        driver.findElement(By.xpath("//input[@class='text-right']")).sendKeys("20000");
-
-        //Fills name user
-        driver.findElement(By.xpath("//td[contains(@class,'input-label') and text()='Name']/following-sibling::*/input")).clear();
-        driver.findElement(By.xpath("//td[contains(@class,'input-label') and text()='Name']/following-sibling::*/input")).sendKeys("Tio");
-
-        //Fills email user
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Email']/following-sibling::*/input")).clear();
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Email']/following-sibling::*/input")).sendKeys("tioagung92@gmail.com");
-
-        //Fills Phone No
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Phone no']/following-sibling::*/input")).clear();
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Phone no']/following-sibling::*/input")).sendKeys("08987357158");
-
-        //Fills City
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='City']/following-sibling::*/input")).clear();
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='City']/following-sibling::*/input")).sendKeys("Depok");
-
-        //Fills Address
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Address']/following-sibling::*/textarea")).clear();
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Address']/following-sibling::*/textarea")).sendKeys("Kemang raya");
-
-        //Fills Postal code
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Postal Code']/following-sibling::*/input")).clear();
-        driver.findElement(By.xpath("//td[contains(@class, 'input-label') and text()='Postal Code']/following-sibling::*/input")).sendKeys("12720");
+    @And("user search product {string}")
+    public void searchProduct(String product) throws InterruptedException {
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//div[@class='tt-search tt-dropdown-obj']/button[@class='tt-dropdown-toggle']")).click();
+        driver.findElement(By.xpath("//input[@class='tt-search-input boost-pfs-search-box']")).isDisplayed();
+        driver.findElement(By.xpath("//input[@class='tt-search-input boost-pfs-search-box']")).sendKeys(product);
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//img[@alt='LA Dodgers Fielder Ball Cap Denim']")).click();
     }
 
-    @And("user click button {string}")
-    public void clickCheckoutButton(String values) throws InterruptedException {
-        driver.findElement(By.xpath("//div[contains(text(),'" + values + "')]")).isDisplayed();
-        driver.findElement(By.xpath("//div[contains(text(),'" + values + "')]")).click();
+    @And("user go to product detail page")
+    public void goToProductDetailPage() throws InterruptedException {
+        driver.findElement(By.xpath("//h1[contains(text(),'LA Dodgers Fielder Ball Cap Denim')]")).isDisplayed();
+        driver.findElement(By.xpath("//span[.='IDR 875.000']")).isDisplayed();
+        driver.findElement(By.xpath("//a[.='59']")).click();
     }
 
-    @When("user is in Checkout page")
-    public void validateCheckoutPage() throws InterruptedException {
-        Thread.sleep(4000);
-        driver.switchTo().frame("snap-midtrans");
-        driver.findElement(By.xpath("//div[contains(text(),'Rp20.000')]")).isDisplayed();
-        driver.findElement(By.xpath("//div[contains(text(),'All payment methods')]")).isDisplayed();
+    @And("user add to cart product")
+    public void addToCart() throws InterruptedException {
+        driver.findElement(By.xpath("//button[@class='btn btn-lg btn-addtocart addtocart-js']")).click();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//div[@class='tt-modal-addtocart mobile']/a[.='Lihat Keranjang']")).click();
     }
 
-    @And("user choose {string} payment method")
-    public void chooseCreditCardPaymentMethod(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//div[contains(text(),'" + value + "')]")).isDisplayed();
-        driver.findElement(By.xpath("//img[@alt='VISA']")).isDisplayed();
-        driver.findElement(By.xpath("//img[@alt='VISA']")).click();
+    @And("user is in Cart page")
+    public void verifyProductInCart() throws InterruptedException {
+        driver.findElement(By.xpath("//h1[contains(text(),'Keranjang Belanja')]")).isDisplayed();
+        driver.findElement(By.xpath("//a[.='LA Dodgers Fielder Ball Cap Denim']")).isDisplayed();
+        driver.findElement(By.xpath("//tr[@id='grandtotal']//span[contains(text(),'IDR 875.000')]"));
     }
 
-    @And("user fill card number {string}")
-    public void fillCardNumber(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//span[contains(text(),'Credit/debit card')]")).isDisplayed();
-        driver.findElement(By.xpath("//div[contains(@class, 'card-number')]/div[2]/input")).isDisplayed();
-        driver.findElement(By.xpath("//div[contains(@class, 'card-number')]/div[2]/input")).sendKeys(value);
+    @And("user click button checkout")
+    public void clickButtonCheckout() throws InterruptedException {
+        driver.findElement(By.xpath("//button[@name='checkout']")).click();
     }
 
-    @And("user fill expiration date {string}")
-    public void fillExpDate(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//input[@id='card-expiry']")).isDisplayed();
-        driver.findElement(By.xpath("//input[@id='card-expiry']")).sendKeys(value);
+    @And("user is in checkout confirmation page")
+    public void verifyCheckoutInformation() throws InterruptedException {
+        driver.findElement(By.xpath("//h2[.='Alamat pengiriman']")).isDisplayed();
     }
 
-    @And("user fill cvv number {string}")
-    public void fillCvvNumberField(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//input[@id='card-cvv']")).isDisplayed();
-        driver.findElement(By.xpath("//input[@id='card-cvv']")).sendKeys(value);
+    @And("user fill data shipping address")
+    public void fillDataShipping() throws InterruptedException {
+    //Fill data Firstname
+        driver.findElement(By.id("TextField8")).isDisplayed();
+        driver.findElement(By.id("TextField8")).sendKeys("Tio pratama agung");
+
+    //Fill data Lastname
+        driver.findElement(By.id("TextField9")).isDisplayed();
+        driver.findElement(By.id("TextField9")).sendKeys("Candidate QA");
+
+    //Fill alamat
+        driver.findElement(By.id("TextField10")).isDisplayed();
+        driver.findElement(By.id("TextField10")).sendKeys("Ihsan residence");
+
+    //Fill kota dan kecamatan
+        driver.findElement(By.id("TextField12")).isDisplayed();
+        driver.findElement(By.id("TextField12")).sendKeys("Depok , Cipayung");
+
+    //Fill provinsi
+        driver.findElement(By.id("Select3")).click();
+        driver.findElement(By.xpath("//option[.='Jawa Barat']")).click();
+
+    //Fill kode pos
+        driver.findElement(By.id("TextField13")).isDisplayed();
+        driver.findElement(By.id("TextField13")).sendKeys("16442");
+
+    //Fill no handphone
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,2000)");
+        driver.findElement(By.id("TextField14")).isDisplayed();
+        driver.findElement(By.id("TextField14")).sendKeys("08987357158");
+
+    //Click button lanjut ke pengiriman
+        driver.findElement(By.xpath("//button[@class='QT4by rqC98 hodFu _7QHNJ VDIfJ j6D1f janiy']")).click();
+
+    }
+    @Then("user is in pengiriman page for choose courier")
+    public void verifyDeliveryPage() throws InterruptedException {
+        driver.findElement(By.xpath("//h2[@id='step-section-primary-header']")).isDisplayed();
+        Thread.sleep(3000);
+        driver.findElement(By.xpath("//button[@type='submit' and @class='QT4by rqC98 hodFu _7QHNJ VDIfJ j6D1f janiy']")).click();
     }
 
-    @And("user choose {string}")
-    public void choosePromoPage(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//label[.='" + value + "']")).isDisplayed();
-        driver.findElement(By.xpath("//label[.='" + value + "']")).click();
+    @When("user go to payment page for choose method payment")
+    public void chooseMethodPayment() throws InterruptedException{
+        Thread.sleep(3000);
+        JavascriptExecutor scroll = (JavascriptExecutor) driver;
+        scroll.executeScript("window.scrollBy(0,2000)");
+        driver.findElement(By.xpath("//span[.='Bank Transfer']")).click();
+        driver.findElement(By.xpath("//p[contains(text(),'Transfer Bank (Verifikasi Manual)')]")).isDisplayed();
+        driver.findElement(By.xpath("//button[@class='QT4by rqC98 hodFu _7QHNJ VDIfJ j6D1f janiy']")).isDisplayed();
+        driver.findElement(By.xpath("//button[@class='QT4by rqC98 hodFu _7QHNJ VDIfJ j6D1f janiy']")).click();
     }
 
-    @When("user click button pay now")
-    public void clickButtonPay() throws InterruptedException {
-        driver.findElement(By.xpath("//button[contains(text(),'Pay now')]")).isDisplayed();
-        driver.findElement(By.xpath("//button[contains(text(),'Pay now')]")).click();
-    }
-
-    @Then("user is in confirmation information page")
-    public void validateConfirmationPage() throws InterruptedException {
-        Thread.sleep(6000);
-        WebElement iframe_element = driver.findElement(By.xpath("//iframe[@class='iframe-3ds']"));
-        driver.switchTo().frame(iframe_element);
-        driver.findElement(By.xpath("//h1[contains(text(),'Issuing Bank')]")).isDisplayed();
-    }
-
-    @And("user input password transaction {string}")
-    public void inputPassword(String value) throws InterruptedException {
-        driver.findElement(By.xpath("//input[@id='otp']")).isDisplayed();
-        driver.findElement(By.xpath("//input[@id='otp']")).sendKeys(value);
-    }
-
-    @When("user click ok button")
-    public void clickOkButton() throws InterruptedException{
-        driver.findElement(By.xpath("//button[@name='ok']")).isDisplayed();
-        driver.findElement(By.xpath("//button[@name='ok']")).click();
-    }
-
-    @Then("user get transaction is success")
+    @Then("user success create transaction")
     public void verifyTransactionSucccess() throws InterruptedException{
-        Thread.sleep(6000);
-        //WebElement iframe_element = driver.findElement(By.xpath("//iframe[id='snap-midtrans']"));
-        //driver.switchTo().frame(iframe_element);
-        driver.switchTo().frame("snap-midtrans");
-        driver.findElement((By.xpath("//*[text()='Payment successful']")));
+        Thread.sleep(4000);
+        driver.findElement(By.xpath("//h2[contains(text(),'Pesanan Anda sudah dikonfirmasi')]"));
+        driver.findElement(By.xpath("//span[contains(text(),'Total')]")).isDisplayed();
+        driver.findElement(By.xpath("//span[text()='Rp875.000,00']")).isDisplayed();
     }
-
 }
